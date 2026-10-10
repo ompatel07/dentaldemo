@@ -3,7 +3,7 @@
 import { useRef } from "react";
 import { EASE, ScrollTrigger, gsap, registerGsap } from "@/lib/gsap";
 import { useIsomorphicLayoutEffect } from "@/lib/hooks";
-import { site } from "@/content/site.config";
+import { has, site } from "@/content/site.config";
 import { telHref } from "@/lib/format";
 import { TransitionLink } from "./PageTransition";
 
@@ -95,6 +95,7 @@ export function Dock() {
         </svg>
       </TransitionLink>
 
+      {has.emergencyPhone ? (
       <a
         href={telHref(site.contact.emergencyPhone)}
         className="tap flex items-center justify-center gap-2.5 rounded-pill px-4 text-[0.875rem] font-medium transition-colors hover:text-accent"
@@ -108,6 +109,7 @@ export function Dock() {
             little of the page as it can. The full phrase is the link's name. */}
         <span>{site.copy.emergencyShort}</span>
       </a>
+      ) : null}
     </div>
   );
 }

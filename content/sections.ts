@@ -14,7 +14,7 @@ export const sections = {
     /** One entry per line of the headline, exactly as it should break. */
     headlineLines: ["Dentistry,", "crafted for smiles", "worth keeping."],
     emphasis: ["crafted"],
-    body: "Four dentists, one unhurried bench in Prahlad Nagar. Prices published before you sit down, a scan before any quote, and a chair that never rushes you.",
+    body: "Four dentists, one unhurried bench. Prices published before you sit down, a scan before any quote, and a chair that never rushes you.",
     bodyEmphasis: ["Prices published before you sit down"],
     primaryCta: "Book your visit",
     secondaryCta: "Take the smile quiz",
@@ -164,7 +164,7 @@ export const sections = {
     label: "Questions",
     headline: "The things people actually ask.",
     emphasis: ["actually"],
-    body: "If yours is not here, ask us on the phone. Nobody will try to book you in the middle of the answer.",
+    body: "If yours is not here, ask us. Nobody will try to book you in the middle of the answer.",
   },
 
   book: {
@@ -201,6 +201,7 @@ export const sections = {
     hoursLabel: "Hours",
     findLabel: "Find us",
     emergencyLabel: "Out of hours",
+    contactLabel: "Contact",
     socialLabel: "Elsewhere",
     legal: "Fictional clinic, built as a template.",
     credit: "Template by your studio.",

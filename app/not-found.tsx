@@ -9,7 +9,7 @@ import { SplitReveal } from "@/components/motion/SplitReveal";
 import { ThemeSection } from "@/components/motion/ThemeSection";
 import { TransitionLink } from "@/components/shell/PageTransition";
 import { treatments } from "@/content/treatments";
-import { site } from "@/content/site.config";
+import { has, site } from "@/content/site.config";
 import { telHref } from "@/lib/format";
 
 export const metadata: Metadata = {
@@ -54,9 +54,15 @@ export default function NotFound() {
             <Button href="/" cursorLabel="Home">
               {site.copy.backHome}
             </Button>
-            <Button href={telHref(site.contact.emergencyPhone)} variant="outline" cursorLabel="Call">
-              {site.copy.emergencyCta}
-            </Button>
+            {has.emergencyPhone ? (
+              <Button href={telHref(site.contact.emergencyPhone)} variant="outline" cursorLabel="Call">
+                {site.copy.emergencyCta}
+              </Button>
+            ) : (
+              <Button href="/#book" variant="outline" cursorLabel="Book">
+                {site.copy.bookCta}
+              </Button>
+            )}
           </Reveal>
             </div>
 

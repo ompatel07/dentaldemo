@@ -6,9 +6,10 @@ import { ChapterLabel } from "@/components/ui/ChapterLabel";
 import { Accordion } from "@/components/ui/Accordion";
 import { OpenStatus } from "@/components/ui/OpenStatus";
 import { faqs } from "@/content/faqs";
-import { site } from "@/content/site.config";
+import { has, site } from "@/content/site.config";
 import { sections } from "@/content/sections";
 import { telHref, whatsappHref } from "@/lib/format";
+import { TransitionLink } from "@/components/shell/PageTransition";
 
 /**
  * 13 - FAQ.
@@ -43,17 +44,32 @@ export function Faq() {
               <p className="text-sm font-medium">
                 <OpenStatus />
               </p>
-              <a href={telHref(site.contact.phone)} className="display mt-4 block text-[clamp(1.5rem,2.2vw,2.1rem)] hover:text-accent">
-                {site.contact.phone}
-              </a>
-              <a
-                href={whatsappHref(site.contact.whatsapp, `Hello ${site.brand.name}, I have a question.`)}
-                target="_blank"
-                rel="noreferrer noopener"
-                className="mt-4 inline-flex h-11 items-center rounded-pill border border-line-strong px-5 text-sm font-medium transition-colors hover:bg-fg hover:text-bg"
-              >
-                {site.copy.whatsappCta}
-              </a>
+              {has.phone ? (
+                <a href={telHref(site.contact.phone)} className="display mt-4 block text-[clamp(1.5rem,2.2vw,2.1rem)] hover:text-accent">
+                  {site.contact.phone}
+                </a>
+              ) : (
+                <a href={"mailto:" + site.contact.email} className="display mt-4 block break-words text-[clamp(1.25rem,1.9vw,1.75rem)] hover:text-accent">
+                  {site.contact.email}
+                </a>
+              )}
+              {has.whatsapp ? (
+                <a
+                  href={whatsappHref(site.contact.whatsapp, `Hello ${site.brand.name}, I have a question.`)}
+                  target="_blank"
+                  rel="noreferrer noopener"
+                  className="mt-4 inline-flex h-11 items-center rounded-pill border border-line-strong px-5 text-sm font-medium transition-colors hover:bg-fg hover:text-bg"
+                >
+                  {site.copy.whatsappCta}
+                </a>
+              ) : (
+                <TransitionLink
+                  href="/contact"
+                  className="mt-4 inline-flex h-11 items-center rounded-pill border border-line-strong px-5 text-sm font-medium transition-colors hover:bg-fg hover:text-bg"
+                >
+                  Send a message
+                </TransitionLink>
+              )}
             </div>
           </Reveal>
         </div>

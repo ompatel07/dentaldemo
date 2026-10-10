@@ -11,7 +11,7 @@ import { EASE, gsap, registerExtra } from "@/lib/gsap";
 import { useReducedMotion } from "@/lib/hooks";
 import { emptyDraft, formatDateLong, submitBooking, toISODate, type BookingDraft } from "@/lib/booking";
 import { treatments } from "@/content/treatments";
-import { site } from "@/content/site.config";
+import { has, site } from "@/content/site.config";
 import { sections } from "@/content/sections";
 import { telHref } from "@/lib/format";
 import { cx } from "@/lib/utils";
@@ -270,9 +270,11 @@ export function BookingModal({ open, onClose }: { open: boolean; onClose: () => 
               {error ? (
                 <p role="alert" className="mt-5 text-sm text-accent">
                   {error}{" "}
-                  <a href={telHref(site.contact.phone)} className="underline underline-offset-4">
-                    {site.contact.phone}
-                  </a>
+                  {has.phone ? (
+                    <a href={telHref(site.contact.phone)} className="underline underline-offset-4">
+                      {site.contact.phone}
+                    </a>
+                  ) : null}
                 </p>
               ) : null}
             </motion.div>
@@ -427,12 +429,14 @@ function Success({ reference, draft }: { reference: string | null; draft: Bookin
         {reference ? <Row label="Reference" value={reference} /> : null}
       </dl>
 
-      <p className="label mt-7">
-        Need to change it? Call{" "}
-        <a href={telHref(site.contact.phone)} className="text-accent underline underline-offset-4">
-          {site.contact.phone}
-        </a>
-      </p>
+      {has.phone ? (
+        <p className="label mt-7">
+          Need to change it? Call{" "}
+          <a href={telHref(site.contact.phone)} className="text-accent underline underline-offset-4">
+            {site.contact.phone}
+          </a>
+        </p>
+      ) : null}
     </div>
   );
 }

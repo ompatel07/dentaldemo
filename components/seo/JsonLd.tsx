@@ -1,4 +1,4 @@
-import { site, fullAddress } from "@/content/site.config";
+import { site, fullAddress, has } from "@/content/site.config";
 import { faqs } from "@/content/faqs";
 
 /**
@@ -25,24 +25,36 @@ export function ClinicJsonLd() {
     name: site.brand.name + " " + site.brand.suffix,
     description: site.seo.description,
     url: site.seo.url,
-    telephone: site.contact.phone,
+    // Search engines are told only what has actually been supplied: an
+    // empty telephone or a street-less address is worse than none.
+    ...(has.phone ? { telephone: site.contact.phone } : {}),
     email: site.contact.email,
     image: site.seo.url + site.seo.ogImage.src,
     priceRange: site.currency.symbol + site.currency.symbol,
     address: {
       "@type": "PostalAddress",
-      streetAddress: site.contact.address.line1 + ", " + site.contact.address.line2,
+      ...(has.address
+        ? {
+            streetAddress: [site.contact.address.line1, site.contact.address.line2].filter(Boolean).join(", "),
+            postalCode: site.contact.address.postalCode,
+          }
+        : {}),
       addressLocality: site.contact.address.city,
       addressRegion: site.contact.address.region,
-      postalCode: site.contact.address.postalCode,
       addressCountry: site.contact.address.country,
     },
-    geo: {
-      "@type": "GeoCoordinates",
-      latitude: site.contact.geo.latitude,
-      longitude: site.contact.geo.longitude,
-    },
-    hasMap: "https://www.google.com/maps/search/?api=1&query=" + encodeURIComponent(fullAddress),
+    ...(site.contact.geo
+      ? {
+          geo: {
+            "@type": "GeoCoordinates",
+            latitude: site.contact.geo.latitude,
+            longitude: site.contact.geo.longitude,
+          },
+        }
+      : {}),
+    ...(has.address
+      ? { hasMap: "https://www.google.com/maps/search/?api=1&query=" + encodeURIComponent(fullAddress) }
+      : {}),
     openingHoursSpecification: site.hours
       .filter((h) => h.opens && h.closes)
       .map((h) => ({

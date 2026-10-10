@@ -11,7 +11,7 @@ import {
   startOfDay,
   weekdayInitials,
 } from "@/lib/booking";
-import { site } from "@/content/site.config";
+import { has, site } from "@/content/site.config";
 import { cx } from "@/lib/utils";
 
 /**
@@ -111,7 +111,7 @@ export function BookingCalendar({
       </div>
 
       <p className="label mt-5">
-        Sundays are emergency only &mdash; call {site.contact.emergencyPhone}
+        Sundays are emergency only{has.emergencyPhone ? <> &mdash; call {site.contact.emergencyPhone}</> : "."}
       </p>
     </div>
   );

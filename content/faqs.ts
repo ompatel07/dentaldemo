@@ -5,11 +5,11 @@ import type { Faq } from "./types";
 export const faqs: Faq[] = [
   {
     q: "Do I need a referral to come here?",
-    a: "No. Call, message on WhatsApp, or use the booking form. First visits are usually available within two or three working days, and same-day if you are in pain.",
+    a: "No. Use the booking form or send us a message. First visits are usually available within two or three working days, and same-day if you are in pain.",
   },
   {
     q: "How do you handle emergencies?",
-    a: "We hold slots every single day for pain, swelling, broken teeth and knocked-out teeth. Call the emergency number and say it is urgent. Outside hours, that number reaches a dentist rather than an answering service.",
+    a: "We hold slots every single day for pain, swelling, broken teeth and knocked-out teeth. Say it is urgent when you book and we will fit you in the same day.",
   },
   {
     q: "Are your prices really fixed?",
@@ -39,8 +39,10 @@ export const faqs: Faq[] = [
     q: "What languages do you speak?",
     a: "English, Hindi, Gujarati across the whole team, and Marathi with Dr. Shah. Tell us which you are most comfortable in when you book.",
   },
-  {
-    q: "Where exactly are you, and is there parking?",
-    a: "Atelier No. 4, Shilp Avenue, Prahlad Nagar, Ahmedabad. There is valet parking at the forecourt and step-free access from the street to the chair.",
-  },
+  // Waiting on the clinic's address (see contact in site.config.ts).
+  // Restore this one with the real street and parking details:
+  // {
+  //   q: "Where exactly are you, and is there parking?",
+  //   a: "<street address>. <parking and access details>.",
+  // },
 ];

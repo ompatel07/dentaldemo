@@ -37,25 +37,42 @@ export const site = {
   currency: { code: "INR", symbol: "₹" } satisfies Currency,
   timezone: "Asia/Kolkata",
 
+  /**
+   * CONTACT DETAILS - waiting on the client.
+   *
+   * The phone numbers and the street address are deliberately empty. Leave
+   * a field as "" and everything that depends on it steps aside: the phone
+   * in the nav, the emergency button in the dock, the WhatsApp links, the
+   * map, the address blocks, and the matching lines of the JSON-LD. Fill a
+   * field in and all of it comes back - nothing else needs editing. (The
+   * `has` flags at the bottom of this file are what the components read.)
+   *
+   *   phone / emergencyPhone / whatsapp   e.g. "+91 79 4000 1200"
+   *   address.line1 / line2 / postalCode  e.g. "No. 4, Shilp Avenue", "Prahlad Nagar", "380015"
+   *   geo                                 e.g. { latitude: 23.0121, longitude: 72.5078 }
+   *   mapEmbedSrc                         the clinic's Google Maps or OpenStreetMap embed URL
+   *   parkingNote                         one line, shown under the address
+   *
+   * Once the address exists, also restore the "Where exactly are you?"
+   * question in content/faqs.ts.
+   */
   contact: {
-    phone: "+91 79 4000 1200",
-    emergencyPhone: "+91 98250 11911",
-    whatsapp: "+91 98250 11911",
+    phone: "" as string,
+    emergencyPhone: "" as string,
+    whatsapp: "" as string,
     email: "studio@aurelle.dental",
     address: {
-      line1: "Atelier No. 4, Shilp Avenue",
-      line2: "Prahlad Nagar",
+      line1: "" as string,
+      line2: "" as string,
       city: "Ahmedabad",
       region: "Gujarat",
-      postalCode: "380015",
+      postalCode: "" as string,
       country: "IN",
       countryName: "India",
     },
-    geo: { latitude: 23.0121, longitude: 72.5078 },
-    /** Replace with the clinic's own Google Maps embed URL. */
-    mapEmbedSrc:
-      "https://www.openstreetmap.org/export/embed.html?bbox=72.4878%2C22.9971%2C72.5278%2C23.0271&layer=mapnik",
-    parkingNote: "Valet parking at the Shilp Avenue forecourt.",
+    geo: null as { latitude: number; longitude: number } | null,
+    mapEmbedSrc: "" as string,
+    parkingNote: "" as string,
   },
 
   hours: [
@@ -267,11 +284,27 @@ export const site = {
 
 export type Site = typeof site;
 
+/** The address on one line - only the parts that exist. */
 export const fullAddress = [
   site.contact.address.line1,
   site.contact.address.line2,
   site.contact.address.city,
-  site.contact.address.region + " " + site.contact.address.postalCode,
-].join(", ");
+  [site.contact.address.region, site.contact.address.postalCode].filter(Boolean).join(" "),
+]
+  .filter(Boolean)
+  .join(", ");
+
+/**
+ * Which contact details have actually been supplied. Components ask these
+ * rather than testing strings themselves, so "is there a phone number yet"
+ * has one answer.
+ */
+export const has = {
+  phone: Boolean(site.contact.phone),
+  emergencyPhone: Boolean(site.contact.emergencyPhone),
+  whatsapp: Boolean(site.contact.whatsapp),
+  address: Boolean(site.contact.address.line1),
+  map: Boolean(site.contact.address.line1 && site.contact.mapEmbedSrc),
+} as const;
 
 export const brandFull = site.brand.name + " — " + site.brand.suffix;

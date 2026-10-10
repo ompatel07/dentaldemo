@@ -12,7 +12,7 @@ import { quizSteps, quizResult } from "@/content/quiz";
 import { sections } from "@/content/sections";
 import { scoreQuiz, type QuizAnswers } from "@/lib/quiz";
 import { formatCurrency, telHref } from "@/lib/format";
-import { site } from "@/content/site.config";
+import { has, site } from "@/content/site.config";
 import { cx } from "@/lib/utils";
 
 /**
@@ -124,12 +124,20 @@ export function Quiz() {
                       <div className="mb-8 rounded-md border border-accent bg-accent/10 p-6">
                         <p className="display text-h3">{quizResult.urgentNotice.title}</p>
                         <p className="mt-3 max-w-[52ch] text-muted">{quizResult.urgentNotice.body}</p>
-                        <a
-                          href={telHref(site.contact.emergencyPhone)}
-                          className="label mt-5 inline-block text-accent underline underline-offset-8"
-                        >
-                          {site.contact.emergencyPhone}
-                        </a>
+                        {has.emergencyPhone ? (
+                          <a
+                            href={telHref(site.contact.emergencyPhone)}
+                            className="label mt-5 inline-block text-accent underline underline-offset-8"
+                          >
+                            {site.contact.emergencyPhone}
+                          </a>
+                        ) : (
+                          <div className="mt-5">
+                            <Button href="/#book" variant="accent" size="sm" cursorLabel="Book">
+                              {site.copy.bookCta}
+                            </Button>
+                          </div>
+                        )}
                       </div>
                     ) : null}
 

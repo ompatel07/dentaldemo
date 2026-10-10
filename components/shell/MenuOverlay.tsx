@@ -4,7 +4,7 @@ import Image from "next/image";
 import { useRef, useState } from "react";
 import { EASE, gsap, registerGsap } from "@/lib/gsap";
 import { useEscapeKey, useFocusTrap, useIsomorphicLayoutEffect, useScrollLock } from "@/lib/hooks";
-import { site } from "@/content/site.config";
+import { has, site } from "@/content/site.config";
 import { sections } from "@/content/sections";
 import { telHref } from "@/lib/format";
 import { TransitionLink } from "./PageTransition";
@@ -206,23 +206,52 @@ export function MenuOverlay({ open, onClose }: Props) {
         </div>
 
         <div className="edge grid shrink-0 gap-x-8 gap-y-5 border-t border-line pb-[clamp(1.25rem,3vh,2.25rem)] pt-[clamp(1rem,2.4vh,1.75rem)] sm:grid-cols-3">
+          {/* Phone and address appear once the clinic has supplied them;
+              until then the same two columns carry email and hours. */}
           <div data-menu-meta>
-            <p className="label mb-1.5">Call</p>
-            <a href={telHref(site.contact.phone)} className="block hover:text-accent">
-              {site.contact.phone}
-            </a>
-            <a href={telHref(site.contact.emergencyPhone)} className="mt-0.5 block text-accent">
-              {site.contact.emergencyPhone} &mdash; emergency
-            </a>
+            {has.phone || has.emergencyPhone ? (
+              <>
+                <p className="label mb-1.5">Call</p>
+                {has.phone ? (
+                  <a href={telHref(site.contact.phone)} className="block hover:text-accent">
+                    {site.contact.phone}
+                  </a>
+                ) : null}
+                {has.emergencyPhone ? (
+                  <a href={telHref(site.contact.emergencyPhone)} className="mt-0.5 block text-accent">
+                    {site.contact.emergencyPhone} &mdash; emergency
+                  </a>
+                ) : null}
+              </>
+            ) : (
+              <>
+                <p className="label mb-1.5">Write</p>
+                <a href={"mailto:" + site.contact.email} className="block hover:text-accent">
+                  {site.contact.email}
+                </a>
+              </>
+            )}
           </div>
 
           <div data-menu-meta>
-            <p className="label mb-1.5">{sections.footer.findLabel}</p>
-            <p>
-              {site.contact.address.line1}
-              <br />
-              {site.contact.address.line2}, {site.contact.address.city}
-            </p>
+            {has.address ? (
+              <>
+                <p className="label mb-1.5">{sections.footer.findLabel}</p>
+                <p>
+                  {site.contact.address.line1}
+                  <br />
+                  {site.contact.address.line2}, {site.contact.address.city}
+                </p>
+              </>
+            ) : (
+              <>
+                <p className="label mb-1.5">{sections.footer.hoursLabel}</p>
+                <p>
+                  <OpenStatus />
+                </p>
+                <p className="text-muted">{site.contact.address.city}</p>
+              </>
+            )}
           </div>
 
           <div data-menu-meta>

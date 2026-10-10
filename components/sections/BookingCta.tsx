@@ -8,7 +8,7 @@ import { SplitReveal } from "@/components/motion/SplitReveal";
 import { Reveal } from "@/components/motion/Reveal";
 import { ChapterLabel } from "@/components/ui/ChapterLabel";
 import { Button } from "@/components/ui/Button";
-import { site } from "@/content/site.config";
+import { has, site } from "@/content/site.config";
 import { sections } from "@/content/sections";
 import { telHref, whatsappHref } from "@/lib/format";
 
@@ -82,10 +82,13 @@ export function BookingCta() {
                 <Button onClick={show} variant="accent" size="lg" cursorLabel="Book">
                   {site.copy.bookCta}
                 </Button>
-                <Button href={telHref(site.contact.phone)} variant="outline" size="lg" cursorLabel="Call">
+                {has.phone ? (
+                  <Button href={telHref(site.contact.phone)} variant="outline" size="lg" cursorLabel="Call">
                   {site.copy.callCta}
                 </Button>
-                <Button
+                ) : null}
+                {has.whatsapp ? (
+                  <Button
                   href={whatsappHref(site.contact.whatsapp, `Hello ${site.brand.name}, I would like to book a visit.`)}
                   variant="ghost"
                   size="lg"
@@ -93,6 +96,7 @@ export function BookingCta() {
                 >
                   {site.copy.whatsappCta}
                 </Button>
+                ) : null}
               </Reveal>
             </div>
 

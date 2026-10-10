@@ -3,7 +3,7 @@
 import { useRef, useState } from "react";
 import { EASE, ScrollTrigger, gsap, registerGsap } from "@/lib/gsap";
 import { useIsomorphicLayoutEffect } from "@/lib/hooks";
-import { site } from "@/content/site.config";
+import { has, site } from "@/content/site.config";
 import { TransitionLink } from "./PageTransition";
 import { MenuOverlay } from "./MenuOverlay";
 import { ScrollProgress } from "./ScrollProgress";
@@ -112,12 +112,14 @@ export function Nav() {
           </nav>
 
           <div className="flex shrink-0 items-center gap-2">
-            <a
-              href={telHref(site.contact.phone)}
-              className="hidden h-11 items-center rounded-pill px-4 text-[0.875rem] font-medium hover:text-accent xl:flex"
-            >
-              {site.contact.phone}
-            </a>
+            {has.phone ? (
+              <a
+                href={telHref(site.contact.phone)}
+                className="hidden h-11 items-center rounded-pill px-4 text-[0.875rem] font-medium hover:text-accent xl:flex"
+              >
+                {site.contact.phone}
+              </a>
+            ) : null}
             <TransitionLink
               href="/#book"
               className="hidden h-11 items-center rounded-pill bg-fg px-5 text-[0.875rem] font-medium text-bg transition-colors hover:bg-accent-bright hover:text-accent-fg sm:flex"

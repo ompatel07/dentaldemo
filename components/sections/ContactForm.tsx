@@ -3,7 +3,7 @@
 import { useState } from "react";
 import { Button } from "@/components/ui/Button";
 import { submitEnquiry, type Enquiry } from "@/lib/contact";
-import { site } from "@/content/site.config";
+import { has, site } from "@/content/site.config";
 import { telHref } from "@/lib/format";
 import { cx } from "@/lib/utils";
 
@@ -44,12 +44,14 @@ export function ContactForm() {
       <div className="rounded-mask border border-line bg-surface p-[clamp(1.5rem,3vw,2.5rem)]">
         <p className="display text-h2">Message received.</p>
         <p className="mt-4 max-w-[44ch] text-muted">
-          Someone from the atelier will reply within two working hours. If it is urgent, please call rather than
-          wait.
+          Someone from the atelier will reply within two working hours.
+          {has.emergencyPhone ? " If it is urgent, please call rather than wait." : ""}
         </p>
-        <a href={telHref(site.contact.emergencyPhone)} className="label mt-6 inline-block text-accent underline underline-offset-8">
-          {site.contact.emergencyPhone}
-        </a>
+        {has.emergencyPhone ? (
+          <a href={telHref(site.contact.emergencyPhone)} className="label mt-6 inline-block text-accent underline underline-offset-8">
+            {site.contact.emergencyPhone}
+          </a>
+        ) : null}
       </div>
     );
   }
@@ -128,10 +130,22 @@ export function ContactForm() {
 
       {state === "error" ? (
         <p role="alert" className="text-sm text-accent sm:col-span-2">
-          That did not send. Please call{" "}
-          <a href={telHref(site.contact.phone)} className="underline underline-offset-4">
-            {site.contact.phone}
-          </a>
+          That did not send. Please{" "}
+          {has.phone ? (
+            <>
+              call{" "}
+              <a href={telHref(site.contact.phone)} className="underline underline-offset-4">
+                {site.contact.phone}
+              </a>
+            </>
+          ) : (
+            <>
+              try again, or write to{" "}
+              <a href={"mailto:" + site.contact.email} className="underline underline-offset-4">
+                {site.contact.email}
+              </a>
+            </>
+          )}
           .
         </p>
       ) : null}

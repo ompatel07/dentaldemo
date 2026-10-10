@@ -80,6 +80,6 @@ export const quizResult = {
   /** Shown when answers point at pain or urgency. */
   urgentNotice: {
     title: "This sounds like it should not wait.",
-    body: "Call us and say it is urgent. We keep slots open every day for exactly this.",
+    body: "Tell us it is urgent when you book. We keep slots open every day for exactly this.",
   },
 };

@@ -552,3 +552,18 @@ html.booting footer {
     font-size: max(16px, 1em);
   }
 }
+
+/* The slow turn of the badge around the hero molar on phones. */
+@keyframes spin-slow {
+  to {
+    rotate: 360deg;
+  }
+}
+
+.spin-slow {
+  animation: spin-slow 26s linear infinite;
+}
+
+html[data-motion="reduce"] .spin-slow {
+  animation: none;
+}

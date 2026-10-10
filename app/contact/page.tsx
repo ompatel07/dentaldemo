@@ -7,7 +7,7 @@ import { ThemeSection } from "@/components/motion/ThemeSection";
 import { ParallaxImage } from "@/components/motion/ParallaxImage";
 import { ContactForm } from "@/components/sections/ContactForm";
 import { MapEmbed } from "@/components/ui/MapEmbed";
-import { site, fullAddress } from "@/content/site.config";
+import { site, fullAddress, has } from "@/content/site.config";
 import { mapsHref, telHref, whatsappHref } from "@/lib/format";
 
 export const metadata: Metadata = {
@@ -40,8 +40,10 @@ export default function ContactPage() {
 
               <Reveal trigger="mount" delay={0.35} className="mt-7 max-w-[44ch]">
                 <p className="text-lead text-muted">
-                  Walk in, call, or send a message and we will call you back. First visits are usually available
-                  within two or three working days.
+                  {has.phone
+                    ? "Walk in, call, or send a message and we will call you back."
+                    : "Send a message and we will come back to you within two working hours."}{" "}
+                  First visits are usually available within two or three working days.
                 </p>
               </Reveal>
             </div>
@@ -66,7 +68,8 @@ export default function ContactPage() {
         </div>
       </ThemeSection>
 
-      {/* Emergency first. */}
+      {/* Emergency first - once there is a number to put on it. */}
+      {has.emergencyPhone ? (
       <ThemeSection theme="ink" className="py-[clamp(2rem,6vh,4rem)]">
         <div className="edge flex flex-wrap items-center justify-between gap-6">
           <div className="flex items-center gap-4">
@@ -91,51 +94,60 @@ export default function ContactPage() {
           </a>
         </div>
       </ThemeSection>
+      ) : null}
 
       <ThemeSection theme="paper" className="section-y">
         <div className="edge grid-editorial gap-y-14">
           {/* Details */}
           <div className="col-span-12 lg:col-span-5">
-            <p className="label">Find us</p>
-            <a
-              href={mapsHref(site.brand.name + ", " + fullAddress)}
-              target="_blank"
-              rel="noreferrer noopener"
-              className="mt-5 block text-lead leading-snug hover:text-accent"
-              data-cursor-label="Map"
-            >
-              {site.contact.address.line1}
-              <br />
-              {site.contact.address.line2}
-              <br />
-              {site.contact.address.city} {site.contact.address.postalCode}
-            </a>
-            <p className="mt-4 text-sm text-muted">{site.contact.parkingNote}</p>
+            {has.address ? (
+              <>
+                <p className="label">Find us</p>
+                <a
+                  href={mapsHref(site.brand.name + ", " + fullAddress)}
+                  target="_blank"
+                  rel="noreferrer noopener"
+                  className="mt-5 block text-lead leading-snug hover:text-accent"
+                  data-cursor-label="Map"
+                >
+                  {site.contact.address.line1}
+                  <br />
+                  {site.contact.address.line2}
+                  <br />
+                  {site.contact.address.city} {site.contact.address.postalCode}
+                </a>
+                {site.contact.parkingNote ? <p className="mt-4 text-sm text-muted">{site.contact.parkingNote}</p> : null}
 
-            <MapEmbed className="mt-8" heightClass="h-[320px]" />
+                {has.map ? <MapEmbed className="mt-8" heightClass="h-[320px]" /> : null}
+              </>
+            ) : null}
 
-            <dl className="mt-10 space-y-5 border-t border-line pt-7">
-              <div>
-                <dt className="label">Reception</dt>
-                <dd className="mt-2">
-                  <a href={telHref(site.contact.phone)} className="text-lead hover:text-accent">
-                    {site.contact.phone}
-                  </a>
-                </dd>
-              </div>
-              <div>
-                <dt className="label">WhatsApp</dt>
-                <dd className="mt-2">
-                  <a
-                    href={whatsappHref(site.contact.whatsapp, `Hello ${site.brand.name}, I have a question.`)}
-                    target="_blank"
-                    rel="noreferrer noopener"
-                    className="text-lead hover:text-accent"
-                  >
-                    {site.contact.whatsapp}
-                  </a>
-                </dd>
-              </div>
+            <dl className={has.address ? "mt-10 space-y-5 border-t border-line pt-7" : "space-y-5"}>
+              {has.phone ? (
+                <div>
+                  <dt className="label">Reception</dt>
+                  <dd className="mt-2">
+                    <a href={telHref(site.contact.phone)} className="text-lead hover:text-accent">
+                      {site.contact.phone}
+                    </a>
+                  </dd>
+                </div>
+              ) : null}
+              {has.whatsapp ? (
+                <div>
+                  <dt className="label">WhatsApp</dt>
+                  <dd className="mt-2">
+                    <a
+                      href={whatsappHref(site.contact.whatsapp, `Hello ${site.brand.name}, I have a question.`)}
+                      target="_blank"
+                      rel="noreferrer noopener"
+                      className="text-lead hover:text-accent"
+                    >
+                      {site.contact.whatsapp}
+                    </a>
+                  </dd>
+                </div>
+              ) : null}
               <div>
                 <dt className="label">Email</dt>
                 <dd className="mt-2">
