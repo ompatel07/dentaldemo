@@ -1,0 +1,22 @@
+node_modules
+.next
+out
+build
+.DS_Store
+*.pem
+npm-debug.log*
+.env*
+!.env.example
+next-env.d.ts
+tsconfig.tsbuildinfo
+
+# Audit artifacts
+lh-*.json
+lighthouse*.json
+
+# Visual audit output
+.inspect/
+
+# Deploy tooling and logs
+.vercel
+*.log

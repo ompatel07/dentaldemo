@@ -1,0 +1,183 @@
+/* ============================================================
+   AURELLE - DESIGN TOKENS
+   The single source of truth for colour, type, space and motion.
+   Rebrand = edit this file (+ /content/site.config.ts).
+   ============================================================ */
+
+:root {
+  /* ---- Brand palette -------------------------------------
+     Evergreen, mint and one hot accent. It reads as fresh and clinical
+     without a drop of hospital blue, and it sits well against skin tones
+     and white coats, which is what the photography is made of.
+
+     Every pairing below has been checked against WCAG AA. Two rules keep
+     it that way: --coral is a FILL (ink text on it is 6.0:1, coral text
+     on paper is 2.6:1 and must never happen), and --teal is the accent
+     that is allowed to be text on a light surface. */
+  --paper: #f4f6f3;
+  --paper-soft: #fbfcfa;
+  --bone: #e7ece6;
+  --ink: #0b1f1c;
+  --forest: #12332e;
+  --forest-lift: #1a443d;
+  --mint: #d5f3e8;
+  --mint-deep: #bfe9da;
+  --mint-strong: #72e5c0;
+  --teal: #0c6b58;
+  --coral: #ff6a3d;
+  --sand: #efeadf;
+
+  /* ---- Semantic surface model ----------------------------
+     Sections set these through [data-theme]. Components only ever read
+     the semantic names, so any section can change palette without a
+     component knowing. */
+  --bg: var(--paper);
+  --fg: var(--ink);
+  --muted: color-mix(in oklab, var(--ink) 66%, var(--paper));
+  /* Decorative only - disabled states and hairlines. Never text. */
+  --faint: color-mix(in oklab, var(--ink) 30%, var(--paper));
+  --surface: var(--bone);
+  --surface-2: var(--paper-soft);
+  --line: color-mix(in oklab, var(--ink) 12%, var(--paper));
+  --line-strong: color-mix(in oklab, var(--ink) 26%, var(--paper));
+  /* Readable accent: safe as text on this surface. */
+  --accent: var(--teal);
+  /* Loud accent: fills, markers, the primary button. Ink text on top. */
+  --accent-bright: var(--coral);
+  --accent-fg: var(--ink);
+  /* A soft tinted chip behind small things. */
+  --tint: var(--mint);
+
+  /* ---- Type ----------------------------------------------- */
+  --font-display: var(--font-face-display), "Bricolage Grotesque", ui-sans-serif, system-ui, sans-serif;
+  --font-accent: var(--font-face-accent), "Fraunces", Georgia, serif;
+  --font-body: var(--font-face-body), "Inter Tight", ui-sans-serif, system-ui, sans-serif;
+  --font-mono: var(--font-face-mono), "JetBrains Mono", ui-monospace, monospace;
+
+  /* Fluid scale. The hero also respects viewport HEIGHT: a 1920x770
+     laptop window is short, and type sized on width alone pushed the
+     buttons below the fold. */
+  --fs-hero: clamp(2.9rem, min(8.4vw, 19svh), 10rem);
+  --fs-display: clamp(2.5rem, min(6.4vw, 15svh), 7rem);
+  --fs-h1: clamp(2.1rem, 4.4vw, 4.4rem);
+  --fs-h2: clamp(1.6rem, 2.8vw, 2.75rem);
+  --fs-h3: clamp(1.2rem, 1.7vw, 1.6rem);
+  --fs-lead: clamp(1.05rem, 1.35vw, 1.35rem);
+  --fs-body: clamp(0.975rem, 1.02vw, 1.0625rem);
+  --fs-sm: clamp(0.85rem, 0.9vw, 0.9375rem);
+  --fs-label: clamp(0.66rem, 0.72vw, 0.75rem);
+
+  --lh-display: 0.94;
+  --lh-tight: 1.06;
+  --lh-snug: 1.3;
+  --lh-body: 1.6;
+  --ls-display: -0.045em;
+  --ls-tight: -0.02em;
+  --ls-label: 0.14em;
+
+  /* ---- Space and layout ----------------------------------- */
+  --gutter: clamp(1.25rem, 4.2vw, 4.5rem);
+  --section-y: clamp(4rem, 9vh, 7.5rem);
+  --max-w: 1760px;
+  --max-measure: 62ch;
+  --grid-cols: 12;
+
+  /* ---- Radii ---------------------------------------------- */
+  --r-xs: 6px;
+  --r-sm: 12px;
+  --r-md: 18px;
+  --r-lg: 26px;
+  --r-xl: 36px;
+  --r-mask: clamp(18px, 2vw, 32px);
+  --r-pill: 999px;
+
+  /* ---- Motion --------------------------------------------- */
+  --ease-reveal: cubic-bezier(0.76, 0, 0.24, 1);
+  --ease-expo: cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-quart: cubic-bezier(0.25, 1, 0.5, 1);
+
+  --dur-fast: 0.28s;
+  --dur-ui: 0.48s;
+  --dur-reveal: 1s;
+  --dur-slow: 1.4s;
+
+  /* ---- Depth and texture ---------------------------------- */
+  --grain-opacity: 0.03;
+  --grain-url: url("data:image/svg+xml,<svg%20xmlns='http://www.w3.org/2000/svg'%20width='180'%20height='180'><filter%20id='n'><feTurbulence%20type='fractalNoise'%20baseFrequency='0.82'%20numOctaves='3'%20stitchTiles='stitch'/><feColorMatrix%20type='saturate'%20values='0'/></filter><rect%20width='180'%20height='180'%20filter='url%28%23n%29'/></svg>");
+  --shadow-soft: 0 1px 2px rgb(11 31 28 / 0.05), 0 14px 34px -14px rgb(11 31 28 / 0.16);
+  --shadow-lift: 0 2px 6px rgb(11 31 28 / 0.06), 0 34px 70px -26px rgb(11 31 28 / 0.32);
+
+  /* ---- Chrome --------------------------------------------- */
+  --nav-h: clamp(60px, 7vh, 76px);
+  --z-grain: 60;
+  --z-nav: 70;
+  --z-dock: 75;
+  --z-cursor: 90;
+  --z-overlay: 95;
+  --z-preloader: 100;
+}
+
+/* ============================================================
+   SECTION THEMES
+   <section data-theme="ink"> re-points the whole semantic model.
+   ============================================================ */
+
+[data-theme="paper"] {
+  --bg: var(--paper);
+  --fg: var(--ink);
+  --muted: color-mix(in oklab, var(--ink) 66%, var(--paper));
+  --faint: color-mix(in oklab, var(--ink) 30%, var(--paper));
+  --surface: var(--bone);
+  --surface-2: var(--paper-soft);
+  --line: color-mix(in oklab, var(--ink) 12%, var(--paper));
+  --line-strong: color-mix(in oklab, var(--ink) 26%, var(--paper));
+  --accent: var(--teal);
+  --accent-bright: var(--coral);
+  --accent-fg: var(--ink);
+  --tint: var(--mint);
+}
+
+[data-theme="ink"] {
+  --bg: var(--ink);
+  --fg: var(--paper);
+  --muted: color-mix(in oklab, var(--paper) 68%, var(--ink));
+  --faint: color-mix(in oklab, var(--paper) 30%, var(--ink));
+  --surface: var(--forest);
+  --surface-2: var(--forest-lift);
+  --line: color-mix(in oklab, var(--paper) 15%, var(--ink));
+  --line-strong: color-mix(in oklab, var(--paper) 30%, var(--ink));
+  --accent: var(--mint-strong);
+  --accent-bright: var(--coral);
+  --accent-fg: var(--ink);
+  --tint: var(--forest-lift);
+}
+
+[data-theme="mint"] {
+  --bg: var(--mint);
+  --fg: var(--ink);
+  --muted: color-mix(in oklab, var(--ink) 68%, var(--mint));
+  --faint: color-mix(in oklab, var(--ink) 30%, var(--mint));
+  --surface: var(--mint-deep);
+  --surface-2: var(--paper-soft);
+  --line: color-mix(in oklab, var(--ink) 14%, var(--mint));
+  --line-strong: color-mix(in oklab, var(--ink) 28%, var(--mint));
+  --accent: var(--teal);
+  --accent-bright: var(--coral);
+  --accent-fg: var(--ink);
+  --tint: var(--paper-soft);
+}
+
+[data-theme="sand"] {
+  --bg: var(--sand);
+  --fg: var(--ink);
+  --muted: color-mix(in oklab, var(--ink) 68%, var(--sand));
+  --faint: color-mix(in oklab, var(--ink) 30%, var(--sand));
+  --surface: var(--paper-soft);
+  --surface-2: #e4decf;
+  --line: color-mix(in oklab, var(--ink) 13%, var(--sand));
+  --line-strong: color-mix(in oklab, var(--ink) 27%, var(--sand));
+  --accent: var(--teal);
+  --accent-bright: var(--coral);
+  --accent-fg: var(--ink);
+  --tint: var(--paper-soft);
+}

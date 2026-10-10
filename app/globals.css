@@ -1,0 +1,536 @@
+@import "tailwindcss";
+@import "../styles/tokens.css";
+
+/* ============================================================
+   MOTION PREFERENCE
+   One switch for the whole site. A blocking script in app/layout.tsx
+   writes data-motion="reduce" or "full" onto <html> - from the OS
+   preference, or from site.config when the template is told to ignore
+   it - and everything, CSS and JS alike, reads that one attribute.
+
+   `reduce:` replaces Tailwind's built-in `motion-reduce:` so utilities
+   follow the same switch instead of the raw media query.
+   ============================================================ */
+
+@custom-variant reduce (html[data-motion="reduce"] &);
+
+/* ============================================================
+   TAILWIND THEME BRIDGE
+   `inline` keeps the var() reference live, so utilities such as
+   bg-bg / text-fg automatically follow [data-theme].
+   ============================================================ */
+
+@theme inline {
+  --color-bg: var(--bg);
+  --color-fg: var(--fg);
+  --color-muted: var(--muted);
+  --color-faint: var(--faint);
+  --color-surface: var(--surface);
+  --color-surface-2: var(--surface-2);
+  --color-line: var(--line);
+  --color-line-strong: var(--line-strong);
+  --color-accent: var(--accent);
+  --color-accent-bright: var(--accent-bright);
+  --color-accent-fg: var(--accent-fg);
+  --color-tint: var(--tint);
+
+  --color-paper: var(--paper);
+  --color-ink: var(--ink);
+  --color-forest: var(--forest);
+  --color-mint: var(--mint);
+  --color-mint-strong: var(--mint-strong);
+  --color-teal: var(--teal);
+  --color-coral: var(--coral);
+  --color-sand: var(--sand);
+
+  --font-display: var(--font-display);
+  --font-accent: var(--font-accent);
+  --font-body: var(--font-body);
+  --font-mono: var(--font-mono);
+
+  --text-hero: var(--fs-hero);
+  --text-display: var(--fs-display);
+  --text-h1: var(--fs-h1);
+  --text-h2: var(--fs-h2);
+  --text-h3: var(--fs-h3);
+  --text-lead: var(--fs-lead);
+  --text-body: var(--fs-body);
+  --text-sm: var(--fs-sm);
+  --text-label: var(--fs-label);
+
+  --radius-xs: var(--r-xs);
+  --radius-sm: var(--r-sm);
+  --radius-md: var(--r-md);
+  --radius-lg: var(--r-lg);
+  --radius-xl: var(--r-xl);
+  --radius-mask: var(--r-mask);
+  --radius-pill: var(--r-pill);
+
+  --ease-reveal: var(--ease-reveal);
+  --ease-expo: var(--ease-expo);
+
+  --shadow-soft: var(--shadow-soft);
+  --shadow-lift: var(--shadow-lift);
+}
+
+/* ============================================================
+   BASE RESETS - inside @layer base, and that is not cosmetic.
+   Tailwind v4 puts utilities in @layer utilities. Unlayered CSS beats
+   every layer regardless of specificity, so an unlayered `a { color:
+   inherit }` silently defeats `text-bg` on every link in the project.
+   Element resets belong in base so utilities can override them.
+   ============================================================ */
+
+@layer base {
+  *,
+  *::before,
+  *::after {
+    box-sizing: border-box;
+  }
+
+  html {
+    /* Lenis owns scrolling; native smooth would fight it. */
+    scroll-behavior: auto;
+    -webkit-text-size-adjust: 100%;
+  }
+
+  html,
+  body {
+    margin: 0;
+    padding: 0;
+    background: var(--bg);
+    color: var(--fg);
+    overscroll-behavior-y: none;
+  }
+
+  body {
+    font-family: var(--font-body);
+    font-size: var(--fs-body);
+    line-height: var(--lh-body);
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    transition:
+      background-color 0.8s var(--ease-quart),
+      color 0.8s var(--ease-quart);
+  }
+
+  h1,
+  h2,
+  h3,
+  h4,
+  p,
+  figure,
+  blockquote {
+    margin: 0;
+    text-wrap: pretty;
+  }
+
+  h1,
+  h2,
+  h3,
+  h4 {
+    font-weight: inherit;
+    text-wrap: balance;
+  }
+
+  a {
+    color: inherit;
+    text-decoration: none;
+  }
+
+  button {
+    font: inherit;
+    color: inherit;
+    background: none;
+    border: 0;
+    padding: 0;
+    cursor: pointer;
+  }
+
+  /* WCAG 2.5.8 target size: a bare text button is otherwise 10px tall. */
+  button,
+  [role="tab"],
+  [role="button"] {
+    min-height: 24px;
+  }
+
+  ul,
+  ol {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  img,
+  svg,
+  video,
+  canvas {
+    display: block;
+    max-width: 100%;
+  }
+
+  ::selection {
+    background: var(--mint-strong);
+    color: var(--ink);
+  }
+
+  :focus-visible {
+    outline: 2px solid var(--accent);
+    outline-offset: 3px;
+    border-radius: var(--r-xs);
+  }
+}
+
+/* Lenis */
+html.lenis,
+html.lenis body {
+  height: auto;
+}
+.lenis.lenis-smooth {
+  scroll-behavior: auto !important;
+}
+.lenis.lenis-smooth [data-lenis-prevent] {
+  overscroll-behavior: contain;
+}
+.lenis.lenis-stopped {
+  overflow: hidden;
+}
+
+/* ============================================================
+   PRIMITIVES
+   ============================================================ */
+
+@utility edge {
+  padding-inline: var(--gutter);
+  margin-inline: auto;
+  width: 100%;
+  max-width: var(--max-w);
+}
+
+@utility section-y {
+  padding-block: var(--section-y);
+}
+
+@utility grid-editorial {
+  display: grid;
+  grid-template-columns: repeat(var(--grid-cols), minmax(0, 1fr));
+  column-gap: clamp(0.75rem, 1.6vw, 1.75rem);
+}
+
+/* Small mono meta: specs, prices, counters. */
+/* Small supporting text: form labels, captions, column heads. It used to be
+   uppercase mono with wide tracking, which is fine for two words and
+   unreadable for a sentence - and half of its uses were sentences. */
+@utility label {
+  font-family: var(--font-body);
+  font-size: 0.8125rem;
+  line-height: 1.4;
+  letter-spacing: -0.005em;
+  color: var(--muted);
+  font-weight: 500;
+}
+
+/* The display face: a tight, confident grotesk. */
+@utility display {
+  font-family: var(--font-display);
+  font-weight: 560;
+  line-height: var(--lh-display);
+  letter-spacing: var(--ls-display);
+  font-optical-sizing: auto;
+}
+
+/* The one serif on the site: an italic used for single emphasised words. */
+@utility accent-italic {
+  font-family: var(--font-accent);
+  font-style: italic;
+  font-weight: 380;
+  letter-spacing: -0.035em;
+}
+
+/* 44px minimum target for primary controls. */
+@utility tap {
+  min-height: 44px;
+  min-width: 44px;
+}
+
+@utility measure {
+  max-width: var(--max-measure);
+}
+
+@utility rule-t {
+  border-top: 1px solid var(--line);
+}
+@utility rule-b {
+  border-bottom: 1px solid var(--line);
+}
+
+/* Horizontal scrollers keep the gesture and lose the chrome. */
+@utility no-scrollbar {
+  scrollbar-width: none;
+  &::-webkit-scrollbar {
+    display: none;
+  }
+}
+
+/* ============================================================
+   TEXTURE - film grain
+   ============================================================ */
+
+.grain {
+  position: fixed;
+  inset: -12%;
+  z-index: var(--z-grain);
+  pointer-events: none;
+  opacity: var(--grain-opacity);
+  background-image: var(--grain-url);
+  background-size: 180px 180px;
+
+  /*
+    No mix-blend-mode: blending a fixed, full-viewport element forces the
+    browser to re-composite the entire page on every paint. Measured on a
+    throttled phone it cost about 450ms of main thread and twelve
+    Lighthouse points. The drift is a transform, so it stays on the
+    compositor.
+  */
+  transform: translate3d(0, 0, 0);
+  will-change: transform;
+  animation: grain-shift 7s steps(6) infinite;
+}
+
+@keyframes grain-shift {
+  0% {
+    transform: translate3d(0, 0, 0);
+  }
+  20% {
+    transform: translate3d(-2%, -1.5%, 0);
+  }
+  40% {
+    transform: translate3d(1.5%, -1%, 0);
+  }
+  60% {
+    transform: translate3d(-1%, 2%, 0);
+  }
+  80% {
+    transform: translate3d(1.5%, 1.5%, 0);
+  }
+  100% {
+    transform: translate3d(0, 0, 0);
+  }
+}
+
+@media (max-width: 768px) {
+  .grain {
+    animation: none;
+    will-change: auto;
+  }
+}
+
+html[data-theme="ink"] .grain {
+  opacity: calc(var(--grain-opacity) * 1.8);
+}
+
+/* ============================================================
+   PRELOADER
+   A blocking script adds these classes before first paint, so the
+   overlay never flashes on a repeat visit or on a phone.
+   ============================================================ */
+
+html.intro-seen .preloader,
+html.intro-skip .preloader {
+  display: none !important;
+}
+
+/* ============================================================
+   REVEALS
+   ============================================================ */
+
+/* Hidden until the motion library takes over. A <noscript> override in
+   app/layout.tsx unhides everything when JS is unavailable. */
+[data-reveal] {
+  visibility: hidden;
+}
+
+.split-piece {
+  will-change: transform;
+}
+
+/* Above-the-fold entrance: a CSS animation on server-rendered markup, so
+   the headline can be painted before hydration. Held while the preloader
+   curtain is up. */
+@keyframes reveal-rise {
+  from {
+    opacity: 0;
+    transform: translate3d(0, 22px, 0);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+.reveal-rise {
+  animation: reveal-rise 0.95s var(--ease-reveal) both;
+  animation-play-state: paused;
+}
+
+html.intro-done .reveal-rise {
+  animation-play-state: running;
+}
+
+/* On phones the first screen settles into place without fading in. The
+   copy is the largest thing on that screen, and text that starts at zero
+   opacity does not count as painted - so a fade there is, quite literally,
+   a slower page. Same stagger, same easing, readable from the first frame. */
+@keyframes reveal-settle {
+  from {
+    transform: translate3d(0, 14px, 0);
+  }
+  to {
+    transform: none;
+  }
+}
+
+@media (max-width: 767px) {
+  .reveal-rise {
+    animation-name: reveal-settle;
+    animation-duration: 0.8s;
+  }
+}
+
+/* Wizard panels (the quiz): re-keying the element replays the entrance. */
+@keyframes panel-in-next {
+  from {
+    opacity: 0;
+    transform: translate3d(28px, 0, 0);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+@keyframes panel-in-prev {
+  from {
+    opacity: 0;
+    transform: translate3d(-28px, 0, 0);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+.panel-enter {
+  animation: panel-in-next 0.45s var(--ease-expo) both;
+}
+
+.panel-enter[data-dir="-1"] {
+  animation-name: panel-in-prev;
+}
+
+/* A slow float for the hero's small cards. */
+@keyframes float-y {
+  0%,
+  100% {
+    transform: translate3d(0, 0, 0);
+  }
+  50% {
+    transform: translate3d(0, -10px, 0);
+  }
+}
+
+.float-y {
+  animation: float-y 6s ease-in-out infinite;
+}
+
+/* ============================================================
+   CURSOR
+   ============================================================ */
+
+@media (hover: hover) and (pointer: fine) {
+  html.has-custom-cursor,
+  html.has-custom-cursor * {
+    cursor: none !important;
+  }
+
+  /* Text entry keeps its caret. */
+  html.has-custom-cursor :is(input, textarea, select, [contenteditable="true"]),
+  html.has-custom-cursor :is(input, textarea, select, [contenteditable="true"]) * {
+    cursor: auto !important;
+  }
+
+  html.has-custom-cursor :is(input[type="checkbox"], input[type="radio"]) {
+    cursor: pointer !important;
+  }
+
+  html.has-custom-cursor input[type="range"] {
+    cursor: ew-resize !important;
+  }
+}
+
+/* ============================================================
+   ACCESSIBILITY
+   ============================================================ */
+
+.skip-link {
+  position: fixed;
+  top: 0;
+  left: 50%;
+  translate: -50% -140%;
+  z-index: calc(var(--z-preloader) + 1);
+  padding: 0.75rem 1.25rem;
+  background: var(--ink);
+  color: var(--paper);
+  border-radius: 0 0 var(--r-sm) var(--r-sm);
+  font-size: var(--fs-sm);
+  font-weight: 500;
+  transition: translate var(--dur-ui) var(--ease-expo);
+}
+
+.skip-link:focus-visible {
+  translate: -50% 0;
+}
+
+/* Reduced motion, driven by the one attribute rather than the raw media
+   query so the config switch and the OS preference agree. */
+html[data-motion="reduce"] *,
+html[data-motion="reduce"] *::before,
+html[data-motion="reduce"] *::after {
+  animation-duration: 0.01ms !important;
+  animation-iteration-count: 1 !important;
+  transition-duration: 0.01ms !important;
+  scroll-behavior: auto !important;
+}
+
+html[data-motion="reduce"] .grain,
+html[data-motion="reduce"] .float-y {
+  animation: none;
+}
+
+html[data-motion="reduce"] .reveal-rise,
+html[data-motion="reduce"] .panel-enter {
+  animation: none;
+}
+
+@media print {
+  .grain,
+  .skip-link {
+    display: none;
+  }
+}
+
+/* ---------------------------------------------------------------------------
+   Phone boot.
+   A fresh load on a phone only shows the first screen, but the browser lays
+   out all fourteen sections for it - and again each time a webfont lands.
+   The boot script marks that load with html.booting; while it is set,
+   everything below the hero is skipped by layout until it nears the
+   viewport. SmoothScroll removes the class once the page is idle (or at the
+   first touch), so anchors, scrubs and measurements run against the real
+   page. Never set on desktop, on a hash link, or on back/forward.
+--------------------------------------------------------------------------- */
+html.booting main > :nth-child(n + 3),
+html.booting footer {
+  content-visibility: auto;
+  contain-intrinsic-size: auto 100svh;
+}
