@@ -40,12 +40,11 @@ class CanvasBoundary extends Component<{ children: ReactNode; onFail: () => void
  *
  * Gates in front of the canvas, all deliberate:
  *   - config: site.hero.object must be "3d"
- *   - layout: the box must be at least 200px wide and the viewport 1024px,
- *     measured rather than inferred, because navigator hints lie under
- *     emulation and on mid-range phones
- *   - capability: cores, memory, save-data
- *   - timing: nothing loads until the intro is done and the main thread is
- *     idle, so three.js never competes with first paint
+ *   - layout: the box must actually be displayed (it is measured), since
+ *     the hero carries one per breakpoint and hides the other
+ *   - capability: memory, save-data, reduced motion
+ *   - timing: nothing loads until the intro is done, the page has loaded
+ *     and the main thread is idle, so three.js never competes with it
  */
 export function HeroObject({ className }: { className?: string }) {
   const introReady = useIntroReady();
@@ -57,8 +56,11 @@ export function HeroObject({ className }: { className?: string }) {
 
   useEffect(() => {
     if (site.hero.object !== "3d") return;
+    // The hero places one of these per layout and hides the other with
+    // CSS; a hidden box measures zero and never loads anything.
     const width = boxRef.current?.getBoundingClientRect().width ?? 0;
-    if (width < 200 || window.innerWidth < 1024) return;
+    if (width < 72) return;
+    if (site.hero.phones !== "3d" && window.matchMedia("(max-width: 1023px)").matches) return;
 
     const motionOff = prefersReducedMotion();
     setReduced(motionOff);
@@ -68,7 +70,18 @@ export function HeroObject({ className }: { className?: string }) {
 
   useEffect(() => {
     if (!capable || !introReady) return;
-    return onIdle(() => setIdle(true), 2500);
+    // Not before the page itself has loaded, and then only when idle: the
+    // still is already on screen, so the live object can afford to be late.
+    let cancel = () => {};
+    const arm = () => {
+      cancel = onIdle(() => setIdle(true), 2500);
+    };
+    if (document.readyState === "complete") arm();
+    else {
+      window.addEventListener("load", arm, { once: true });
+      cancel = () => window.removeEventListener("load", arm);
+    }
+    return () => cancel();
   }, [capable, introReady]);
 
   const handleFail = useCallback(() => setLive(false), []);
@@ -83,7 +96,7 @@ export function HeroObject({ className }: { className?: string }) {
       <div className="absolute inset-x-[18%] bottom-[4%] h-[9%] rounded-[50%] bg-[var(--ink)]/25 blur-2xl" />
 
       <div className={cx("absolute inset-0 transition-opacity duration-700", live ? "opacity-0" : "opacity-100")}>
-        <Image src="/images/hero-tooth.png" alt="" fill sizes="30vw" className="object-contain" loading="lazy" />
+        <Image src="/images/hero-tooth.png" alt="" fill sizes="(max-width: 1024px) 40vw, 30vw" className="object-contain" loading="lazy" />
       </div>
 
       {capable && introReady && idle ? (

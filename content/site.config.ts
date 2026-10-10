@@ -236,11 +236,19 @@ export const site = {
    * still everywhere else. "still" never loads three.js at all.
    *
    * The live object is cheap now - the mesh is built in a worker and the
-   * lighting is baked (see "The 3D molar" in the README) - and phones never
-   * load it. "still" remains for a clinic that wants no WebGL at all.
+   * lighting is baked (see "The 3D molar" in the README). "still" remains
+   * for a clinic that wants no WebGL at all.
    */
   hero: {
     object: "3d" as "3d" | "still",
+    /**
+     * Phones and tablets, separately. "3d" runs the live object there too;
+     * "still" keeps the rendered picture and never downloads three.js on a
+     * phone. Measured, the live object costs a phone roughly seven
+     * Lighthouse performance points - pick "still" if that matters more
+     * than the tooth turning.
+     */
+    phones: "3d" as "3d" | "still",
   },
 
   booking: {

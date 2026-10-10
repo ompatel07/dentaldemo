@@ -47,11 +47,35 @@ The scripts in `scripts/` (photo pipeline, bakes, audits) are local tools that d
 
 ---
 
+## Phones
+
+Most visitors arrive on one, so the phone layout is tested the way a phone is used — by touch.
+
+```bash
+node scripts/mobile.mjs        http://localhost:3000/   # swipes top to bottom with real touch gestures
+node scripts/mobile.mjs        http://localhost:3000/ --w 320 --h 568
+node scripts/mobile-flows.mjs  http://localhost:3000    # menu, booking, carousel and scroll locks, by touch
+```
+
+`mobile.mjs` reports whether a finger can actually scroll the page, any sideways overflow, any text under 12px, and leaves a screenshot walk-through in `.inspect/walk-<width>/`. It exists because of a real bug: the page scrolled perfectly from script (`window.scrollTo`) and from a mouse wheel while being completely stuck under a finger. **Never sign off a phone layout from scripted scrolling.**
+
+What is different below 768px:
+
+- **Scrolling is native.** Lenis is not started on touch devices; scroll locks (menu, booking) are counted and always released.
+- **The 3D molar sits beside the headline** and runs live on phones with enough memory, after the page has loaded. The still is there from the first frame.
+- **Treatments** is a heading with its own swipe carousel beneath it, not one long horizontal track.
+- **Technology** cards are a plain stack; the sticky overlap only happens from tablet width up.
+- **Before/after** puts the photograph above the list of cases.
+- **Maps do not trap the finger**: on touch the embed ignores gestures and the whole frame is an "Open in Maps" link.
+- **Form fields are never under 16px**, which is the threshold below which iOS zooms the page on focus.
+
+---
+
 ## The one-hour rebrand
 
 ### 1. `content/site.config.ts` — 15 minutes
 
-Brand name, tagline, phone numbers, address, geo coordinates, opening hours, socials, currency, locale, SEO strings, financing rates, booking slots. Also four behaviour switches, documented in place: `motion.reducedMotion`, `intro`, `hero.object`, `booking.endpoint`.
+Brand name, tagline, phone numbers, address, geo coordinates, opening hours, socials, currency, locale, SEO strings, financing rates, booking slots. Also the behaviour switches, documented in place: `motion.reducedMotion`, `intro`, `hero.object`, `hero.phones`, `booking.endpoint`.
 
 ### 2. `styles/tokens.css` — 10 minutes
 
@@ -141,7 +165,7 @@ The hero object is not a downloaded model. `components/hero/molarGeometry.ts` de
 
 Its lighting is **baked**. `/kit/matcap` renders a porcelain sphere in a small studio of light cards; `npm run matcap` photographs it into `public/images/tooth-matcap.webp`, and the live molar looks that texture up by surface direction. `npm run tooth` then captures the still (`hero-tooth.png`) shown before WebGL starts and wherever it never does. To change the glaze or the lights, edit `components/hero/StudioSphere.tsx` and run both.
 
-Set `hero.object: "still"` to never load three.js at all.
+Set `hero.object: "still"` to never load three.js at all, or `hero.phones: "still"` to keep the live object on desktop only.
 
 ---
 
@@ -152,9 +176,10 @@ Measured with Lighthouse 12 against `next start` on a mid-range laptop, several 
 | Shipped defaults (3D molar + preloader on desktop) | Performance | Accessibility | Best practices | SEO |
 | --- | --- | --- | --- | --- |
 | Desktop | **86 – 93** | 100 | 100 | 100 |
-| Mobile (simulated slow 4G, 4× CPU) | **61 – 73** | 100 | 100 | 100 |
+| Mobile (simulated slow 4G, 4× CPU) | **55 – 62** | 100 | 100 | 100 |
+| Mobile with `hero.phones: "still"` | **61 – 73** | 100 | 100 | 100 |
 
-Desktop meets the 90 target on a quiet machine. **Mobile does not meet 85**, and it is worth being plain about why: total blocking time is fine (300–500 ms), but the simulated LCP sits around 4–5 s because the page is long, animation-heavy and hydrates ~230 kB of JavaScript. The levers that would move it are trimming sections or motion on the home page — product decisions, not bugs.
+Desktop meets the 90 target on a quiet machine. **Mobile does not meet 85**, and it is worth being plain about why: the live 3D molar on phones costs roughly seven points (it is what the client asked to see there; `hero.phones: "still"` gives them back), and beyond that the simulated LCP sits around 4–5 s because the page is long, animation-heavy and hydrates ~230 kB of JavaScript. The levers that would move it are trimming sections or motion on the home page — product decisions, not bugs.
 
 ### What was done to get there
 
@@ -166,7 +191,7 @@ Desktop meets the 90 target on a quiet machine. **Mobile does not meet 85**, and
 - GSAP plugins are registered by the components that use them; `SplitText` splits and scroll reveals are built only when their element nears the viewport (IntersectionObserver, which also works inside pinned and translated tracks where ScrollTrigger start positions do not).
 - The static half of the page is server components; Framer Motion ships only inside the two lazy modal chunks; the accordion and quiz animate with CSS.
 - The film grain carries no `mix-blend-mode` and drifts with a transform. Blending a fixed full-viewport layer re-composites the whole page on every paint.
-- The 3D is gated on a **measured element width** rather than `navigator.hardwareConcurrency`, which lies under emulation and on mid-range Androids. Phones never download three.js.
+- The 3D loads only after the page itself has, when the main thread is idle, and only for a box that is actually on screen (it is measured). Phones run it too now that it is cheap; data-saver, reduced motion and low-memory devices keep the still.
 
 `scripts/profile.mjs`, `profile-tree.mjs` and `trace.mjs` are the tools that found the above: CPU time by function, the call tree for a time window, and main-thread long tasks with what is inside each.
 
@@ -219,7 +244,7 @@ These scripts deliberately emulate **`prefers-reduced-motion: reduce`** at a 190
 
 ## Browser and device support
 
-- **Layout** is fluid from 320px up, capped at 1760px, and the hero is sized against viewport *height* as well as width so it fits a short laptop window. The breakpoints that matter: **768px** (the pinned treatment rail and sticky stack switch on), **1024px** (the 3D molar, the preloader, the two-column hero, and the pinned journey — which also needs 700px of height, and otherwise simply scrubs).
+- **Layout** is fluid from 320px up, capped at 1760px, and the hero is sized against viewport *height* as well as width so it fits a short laptop window. The breakpoints that matter: **768px** (the pinned treatment rail and sticky stack switch on), **1024px** (the preloader, the two-column hero, and the pinned journey — which also needs 700px of height, and otherwise simply scrubs).
 - **Pinned horizontal scroll** becomes a native snap carousel below 768px.
 - **The dock** sits in the bottom-right corner on desktop and becomes a full-width bar on phones. It appears after the hero and steps aside at the footer.
 - **The custom cursor** is disabled on touch and under reduced motion, stays hidden until the pointer first moves, and steps aside over form fields so the text caret is never hidden.

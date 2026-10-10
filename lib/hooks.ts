@@ -49,12 +49,18 @@ export function useScrollLock(active: boolean) {
   useEffect(() => {
     if (!active) return;
     let cancelled = false;
+    let locked = false;
     void import("@/lib/gsap").then(({ lockScroll }) => {
-      if (!cancelled) lockScroll();
+      if (cancelled) return;
+      locked = true;
+      lockScroll();
     });
     return () => {
       cancelled = true;
-      void import("@/lib/gsap").then(({ unlockScroll }) => unlockScroll());
+      // Only give back a lock that was actually taken - locks are counted.
+      void import("@/lib/gsap").then(({ unlockScroll }) => {
+        if (locked) unlockScroll();
+      });
     };
   }, [active]);
 }

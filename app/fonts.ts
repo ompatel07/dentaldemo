@@ -22,8 +22,8 @@ export const accent = Fraunces({
   style: ["italic"],
   variable: "--font-face-accent",
   display: "swap",
-  // One or two words per headline; it can arrive after the grotesk.
-  preload: false,
+  // Preloaded: the emphasised word in the hero headline is set in it, and
+  // on a phone connection a late swap there is the first thing you see.
 });
 
 export const body = Inter_Tight({

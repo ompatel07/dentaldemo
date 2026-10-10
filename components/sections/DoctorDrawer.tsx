@@ -39,7 +39,7 @@ export function DoctorDrawer({
             </div>
 
             <p className="label mt-10">{labels.philosophy}</p>
-            <blockquote className="display mt-4 text-h3 italic">{doctor.philosophy}</blockquote>
+            <blockquote className="accent-italic mt-4 text-[clamp(1.25rem,1.8vw,1.65rem)] leading-[1.3]">{doctor.philosophy}</blockquote>
 
             <p className="mt-8 text-muted">{doctor.bio}</p>
 

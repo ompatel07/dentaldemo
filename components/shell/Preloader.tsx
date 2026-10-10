@@ -48,6 +48,11 @@ export function Preloader({ onReveal, onDone }: Props) {
     const counter = counterRef.current;
     if (!root || !counter) return;
 
+    // Hidden by the boot script (phones, repeat visits): IntroProvider is
+    // about to unmount this, so take no lock and build no timeline.
+    const html = document.documentElement;
+    if (html.classList.contains("intro-skip") || html.classList.contains("intro-seen")) return;
+
     registerExtra(DrawSVGPlugin);
 
     const reduced = prefersReducedMotion();

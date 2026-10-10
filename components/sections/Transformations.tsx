@@ -114,8 +114,9 @@ export function Transformations() {
             </div>
           </Reveal>
 
-          {/* Comparison */}
-          <Reveal className="col-span-12 lg:col-span-8" y={28}>
+          {/* Comparison. First on a phone, so tapping a case in the list
+              below changes a photograph you can still see. */}
+          <Reveal className="col-span-12 max-lg:order-first lg:col-span-8" y={28}>
             <div ref={frameRef} role="tabpanel" id={`case-panel-${item.id}`} aria-labelledby={`case-tab-${item.id}`}>
               {/* Keyed so switching case resets the handle to centre. */}
               <CompareSlider key={item.id} item={item} caption={false} />

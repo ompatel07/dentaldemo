@@ -6,6 +6,7 @@ import { SplitReveal } from "@/components/motion/SplitReveal";
 import { ThemeSection } from "@/components/motion/ThemeSection";
 import { ParallaxImage } from "@/components/motion/ParallaxImage";
 import { ContactForm } from "@/components/sections/ContactForm";
+import { MapEmbed } from "@/components/ui/MapEmbed";
 import { site, fullAddress } from "@/content/site.config";
 import { mapsHref, telHref, whatsappHref } from "@/lib/format";
 
@@ -111,15 +112,7 @@ export default function ContactPage() {
             </a>
             <p className="mt-4 text-sm text-muted">{site.contact.parkingNote}</p>
 
-            <div className="mt-8 overflow-hidden rounded-mask border border-line">
-              <iframe
-                src={site.contact.mapEmbedSrc}
-                title={"Map to " + site.brand.name}
-                loading="lazy"
-                referrerPolicy="no-referrer-when-downgrade"
-                className="h-[320px] w-full"
-              />
-            </div>
+            <MapEmbed className="mt-8" heightClass="h-[320px]" />
 
             <dl className="mt-10 space-y-5 border-t border-line pt-7">
               <div>

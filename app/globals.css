@@ -100,7 +100,15 @@
     padding: 0;
     background: var(--bg);
     color: var(--fg);
-    overscroll-behavior-y: none;
+  }
+
+  /* No rubber-banding behind the smooth scroll on a desktop. Phones keep
+     theirs - it is how pull-to-refresh works. */
+  @media (hover: hover) and (pointer: fine) {
+    html,
+    body {
+      overscroll-behavior-y: none;
+    }
   }
 
   body {
@@ -533,4 +541,14 @@ html.booting main > :nth-child(n + 3),
 html.booting footer {
   content-visibility: auto;
   contain-intrinsic-size: auto 100svh;
+}
+
+/* iOS Safari zooms the whole page into any field whose text is under 16px,
+   and does not zoom back out. Keep every control at or above it on touch. */
+@media (pointer: coarse) {
+  input,
+  select,
+  textarea {
+    font-size: max(16px, 1em);
+  }
 }

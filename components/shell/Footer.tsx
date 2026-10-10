@@ -8,6 +8,7 @@ import { site, fullAddress } from "@/content/site.config";
 import { sections } from "@/content/sections";
 import { mapsHref, telHref, whatsappHref } from "@/lib/format";
 import { TransitionLink } from "./PageTransition";
+import { MapEmbed } from "@/components/ui/MapEmbed";
 import { prefersReducedMotion } from "@/lib/motion";
 
 /**
@@ -82,15 +83,7 @@ export function Footer() {
               </a>
               <p className="mt-4 text-sm text-muted">{site.contact.parkingNote}</p>
 
-              <div className="mt-8 overflow-hidden rounded-mask border border-line">
-                <iframe
-                  src={site.contact.mapEmbedSrc}
-                  title={"Map to " + site.brand.name}
-                  loading="lazy"
-                  referrerPolicy="no-referrer-when-downgrade"
-                  className="h-[220px] w-full grayscale-[0.4] contrast-[1.05]"
-                />
-              </div>
+              <MapEmbed className="mt-8" />
             </div>
 
             <div className="col-span-6 lg:col-span-3">

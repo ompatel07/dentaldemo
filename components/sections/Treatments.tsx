@@ -25,11 +25,12 @@ export function Treatments() {
       <PinnedHorizontal
         /* Viewport height only where it pins; on a phone the rail is a
            carousel and takes the height of its cards. */
-        className="py-[clamp(3rem,8vh,5rem)] lg:h-svh lg:py-0"
-        trackClassName="h-full items-center gap-[clamp(1rem,1.8vw,2rem)] px-[var(--gutter)]"
+        className="py-[clamp(3rem,8vh,5rem)] md:h-svh md:py-0"
+        nativeScroll={false}
+        trackClassName="h-full gap-[clamp(1rem,1.8vw,2rem)] max-md:flex-col max-md:gap-8 md:items-center md:px-[var(--gutter)]"
       >
         {/* Panel 00 - the chapter opening. */}
-        <div className="flex w-[80vw] shrink-0 snap-center flex-col justify-center pr-[clamp(0rem,2vw,3rem)] sm:w-[52vw] lg:w-[clamp(340px,27vw,480px)]">
+        <div className="flex shrink-0 flex-col justify-center max-md:px-[var(--gutter)] md:w-[52vw] md:pr-[clamp(0rem,2vw,3rem)] lg:w-[clamp(340px,27vw,480px)]">
           <ChapterLabel chapter={copy.chapter}>{copy.label}</ChapterLabel>
 
           <SplitReveal as="h2" className="display mt-6 text-h1">
@@ -44,8 +45,9 @@ export function Treatments() {
             <Button href="/#book" size="sm" cursorLabel="Book">
               {sections.hero.primaryCta}
             </Button>
-            <p className="hidden items-center gap-2 text-sm text-muted lg:flex">
-              Scroll
+            <p className="flex items-center gap-2 text-sm text-muted">
+              <span className="md:hidden">Swipe</span>
+              <span className="max-md:hidden">Scroll</span>
               <svg viewBox="0 0 24 10" className="h-2.5 w-6" fill="none" aria-hidden="true">
                 <path d="M0 5h22M18 1l4 4-4 4" stroke="currentColor" strokeWidth="1.2" />
               </svg>
@@ -53,12 +55,17 @@ export function Treatments() {
           </Reveal>
         </div>
 
+        {/* On a phone this wrapper IS the carousel: the heading sits above
+            it, and the cards swipe edge to edge with the next one peeking.
+            From the pin breakpoint up it dissolves (display: contents) and
+            the cards ride the pinned track as before. */}
+        <div className="no-scrollbar flex gap-[clamp(0.75rem,1.8vw,2rem)] max-md:snap-x max-md:snap-mandatory max-md:scroll-px-[var(--gutter)] max-md:overflow-x-auto max-md:overscroll-x-contain max-md:px-[var(--gutter)] md:contents">
         {treatments.map((t) => (
           <TreatmentCard key={t.slug} treatment={t} />
         ))}
 
         {/* Closing panel - the rail ends on an action, not on a card edge. */}
-        <div className="flex w-[70vw] shrink-0 snap-center flex-col justify-center sm:w-[40vw] lg:w-[clamp(260px,19vw,320px)]">
+        <div className="flex w-[70vw] shrink-0 snap-start flex-col justify-center sm:w-[40vw] lg:w-[clamp(260px,19vw,320px)]">
           <p className="display text-h2">{copy.cta}</p>
           <p className="mt-3 text-sm text-muted">{sections.pricing.body}</p>
           <div className="mt-6">
@@ -66,6 +73,7 @@ export function Treatments() {
               {sections.pricing.label}
             </Button>
           </div>
+        </div>
         </div>
       </PinnedHorizontal>
     </ThemeSection>

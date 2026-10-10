@@ -89,15 +89,15 @@ type NavigatorExtras = Navigator & {
 };
 
 /**
- * True when the device can realistically carry WebGL plus heavy scroll work.
+ * True when the device can reasonably run the hero's WebGL object.
  *
- * Viewport width is the first gate, and it is deliberately blunt: a
- * transmissive material costs an extra render pass per frame, and a phone
- * that can technically run it still pays for it in battery, heat and a
- * second of main thread during load. Core count is no defence either -
- * mid-range Androids happily report eight cores and then drop frames, and
- * `hardwareConcurrency` is not throttled by device emulation, so it reads
- * as a desktop under test. Below 1024px the still is simply better.
+ * Phones are allowed. They used to be excluded outright, back when the
+ * object was a transmissive material lit by a live environment; it is now
+ * one matcap lookup on a few thousand triangles, meshed in a worker, which
+ * a mid-range phone draws without noticing. What still rules a device out
+ * is the user asking for less (reduced motion, data saver) or genuinely
+ * little memory. HeroObject adds its own gates on top: the box must be on
+ * screen and big enough, and nothing loads until the page has.
  */
 export function isCapableDevice(): boolean {
   if (typeof window === "undefined") return false;
@@ -106,10 +106,7 @@ export function isCapableDevice(): boolean {
   const nav = navigator as NavigatorExtras;
   if (nav.connection?.saveData) return false;
 
-  // Coarse pointer means a phone or tablet whatever the reported width.
-  if (window.matchMedia("(pointer: coarse)").matches) return false;
-  if (window.matchMedia("(max-width: 1023px)").matches) return false;
-
+  // Unreported on Safari and Firefox; assume a current device there.
   const cores = nav.hardwareConcurrency ?? 4;
   const mem = nav.deviceMemory ?? 4;
 
@@ -137,6 +134,10 @@ export function initLenis(): Lenis | null {
     return null;
   }
 
+  // Phones and tablets scroll natively. Lenis would leave touch alone
+  // anyway, so all it could add there is a frame loop and a way to go wrong.
+  if (window.matchMedia("(hover: none) and (pointer: coarse)").matches) return null;
+
   lenis = new Lenis({
     duration: 1.1,
     easing: (t: number) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
@@ -155,6 +156,9 @@ export function initLenis(): Lenis | null {
   gsap.ticker.add(tickerFn);
   gsap.ticker.lagSmoothing(0);
 
+  // Something may have locked the page before this instance existed.
+  applyLock();
+
   return lenis;
 }
 
@@ -169,17 +173,36 @@ export function getLenis(): Lenis | null {
   return lenis;
 }
 
-/** Freeze the page behind modals and the menu overlay. */
-export function lockScroll() {
+/**
+ * Freeze the page behind modals, the menu overlay and the preloader.
+ *
+ * Locks are counted, and every change re-applies BOTH mechanisms - the
+ * inline overflow and Lenis. They used to be either/or, decided at call
+ * time: the preloader locked before Lenis existed (inline overflow) and
+ * unlocked after it did (Lenis only), which left `overflow: hidden` on
+ * <html> for the rest of the visit. A mouse wheel never noticed, because
+ * Lenis scrolls programmatically; a finger could not scroll at all.
+ */
+let locks = 0;
+
+function applyLock() {
   if (typeof document === "undefined") return;
-  if (lenis) lenis.stop();
-  else document.documentElement.style.overflow = "hidden";
+  const locked = locks > 0;
+  document.documentElement.style.overflow = locked ? "hidden" : "";
+  if (lenis) {
+    if (locked) lenis.stop();
+    else lenis.start();
+  }
+}
+
+export function lockScroll() {
+  locks += 1;
+  applyLock();
 }
 
 export function unlockScroll() {
-  if (typeof document === "undefined") return;
-  if (lenis) lenis.start();
-  else document.documentElement.style.overflow = "";
+  locks = Math.max(0, locks - 1);
+  applyLock();
 }
 
 export function scrollToTarget(target: string | number | HTMLElement, offset = 0) {

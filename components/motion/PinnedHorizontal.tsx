@@ -16,6 +16,12 @@ type Props = {
 /** Min viewport width for pinning. Must match the `max-md:` fallback
    * breakpoint below, or a viewport exactly on the boundary gets neither. */
   minWidth?: number;
+  /**
+   * Below the pin breakpoint the track itself becomes a swipe carousel.
+   * Pass false when the caller lays the phone version out itself - e.g. a
+   * heading stacked above its own carousel of cards.
+   */
+  nativeScroll?: boolean;
 };
 
 /**
@@ -33,6 +39,7 @@ export function PinnedHorizontal({
   distance = 1,
   trackClassName,
   minWidth = 768,
+  nativeScroll = true,
 }: Props) {
   const sectionRef = useRef<HTMLDivElement | null>(null);
   const trackRef = useRef<HTMLDivElement | null>(null);
@@ -92,8 +99,8 @@ export function PinnedHorizontal({
           // output order rather than by the caller.
           "flex",
           // Mobile and reduced-motion fallback: real swipe, real snap.
-          "max-md:snap-x max-md:snap-mandatory max-md:overflow-x-auto max-md:overscroll-x-contain",
-          "reduce:snap-x reduce:snap-mandatory reduce:overflow-x-auto",
+          nativeScroll && "max-md:snap-x max-md:snap-mandatory max-md:overflow-x-auto max-md:overscroll-x-contain",
+          "md:reduce:snap-x md:reduce:snap-mandatory md:reduce:overflow-x-auto",
           trackClassName,
         )}
       >

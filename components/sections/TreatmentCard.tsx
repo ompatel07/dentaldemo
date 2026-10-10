@@ -63,7 +63,7 @@ export function TreatmentCard({ treatment }: { treatment: Treatment }) {
   }, []);
 
   return (
-    <article ref={cardRef} className="group/card w-[74vw] shrink-0 snap-center sm:w-[44vw] lg:w-[clamp(280px,21vw,360px)]">
+    <article ref={cardRef} className="group/card w-[76vw] shrink-0 snap-start sm:w-[44vw] lg:w-[clamp(280px,21vw,360px)]">
       <TransitionLink href={`/treatments/${treatment.slug}`} className="block" data-cursor-label="View">
         <div className="relative h-[min(50svh,440px)] overflow-hidden rounded-[var(--r-lg)] bg-surface">
           <div ref={imgRef} className="absolute -inset-[5%] will-change-transform">

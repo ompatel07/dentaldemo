@@ -61,7 +61,7 @@ export function DoctorGrid() {
                 <p className="label mt-4">{doctor.role}</p>
               </button>
 
-              <blockquote className="display mt-5 max-w-[40ch] text-h3 italic text-muted">
+              <blockquote className="accent-italic mt-5 max-w-[40ch] text-[clamp(1.25rem,1.8vw,1.65rem)] leading-[1.3] text-muted">
                 {doctor.philosophy}
               </blockquote>
 

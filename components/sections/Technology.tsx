@@ -39,7 +39,7 @@ export function Technology() {
             <article
               key={item.name}
               data-tech-card
-              className="sticky mb-[clamp(1.5rem,4vh,3rem)]"
+              className="mb-[clamp(1rem,4vh,3rem)] md:sticky"
               style={{ top: `calc(var(--nav-h) + 1rem + ${i * 14}px)` }}
             >
               <div

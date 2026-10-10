@@ -39,12 +39,17 @@ export function Hero() {
         {/* On phones the copy takes only the room it needs, so the top of the
             photograph is already in the first screen. Stretching it to a full
             viewport left three empty bands and no picture. */}
-        <div className="flex flex-col justify-between gap-y-[clamp(1.25rem,3vh,2.5rem)] lg:col-span-7">
-          <Reveal trigger="mount" delay={0.05} y={12}>
+        <div className="relative flex flex-col justify-between gap-y-[clamp(1.25rem,3vh,2.5rem)] lg:col-span-7">
+          {/* The molar on phones and tablets: tucked into the space beside
+              the label and the short first line of the headline. Painted
+              first, so the type always sits over it. */}
+          <HeroObject className="float-y pointer-events-none absolute -right-[5%] -top-[1.5rem] aspect-square w-[40%] max-w-[200px] lg:hidden" />
+
+          <Reveal trigger="mount" delay={0.05} y={12} className="relative">
             <ChapterLabel>{hero.label}</ChapterLabel>
           </Reveal>
 
-          <h1 className="display text-[clamp(2.75rem,min(6vw,12.6svh),7.5rem)]">
+          <h1 className="display relative text-[clamp(2.25rem,11.4vw,2.9rem)] sm:text-[clamp(3rem,8vw,4.75rem)] lg:text-[clamp(2.75rem,min(6vw,12.6svh),7.5rem)]">
             {hero.headlineLines.map((line, i) => (
               <Reveal key={line} as="span" trigger="mount" delay={0.12 + i * 0.1} className="block">
                 {emphasize(line, hero.emphasis)}
