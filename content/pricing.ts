@@ -71,7 +71,7 @@ export const pricingTiers: PricingTier[] = [
 
 /** Shown as a quiet note under the grid. */
 export const pricingNotes = [
-  "Prices are starting prices for the Ahmedabad atelier and include GST.",
+  "Prices are starting prices and include GST.",
   "Your written estimate is issued after the scan and does not change mid-treatment.",
   "Emergency examination is charged at the first-visit rate, never a premium.",
 ];

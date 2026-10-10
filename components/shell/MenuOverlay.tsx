@@ -249,7 +249,7 @@ export function MenuOverlay({ open, onClose }: Props) {
                 <p>
                   <OpenStatus />
                 </p>
-                <p className="text-muted">{site.contact.address.city}</p>
+                {has.city ? <p className="text-muted">{site.contact.address.city}</p> : null}
               </>
             )}
           </div>

@@ -78,7 +78,20 @@ for (const slot of ordered) {
     let buf;
     if (slot.photo) {
       const src = await download(slot.photo, Math.min(2400, Math.max(slot.width, slot.height) * 1.6));
-      buf = await sharp(src)
+      let img = sharp(src);
+      // An explicit crop, as fractions of the source [left, top, width,
+      // height], for when no gravity lands on the right part of the frame.
+      if (slot.crop) {
+        const meta = await sharp(src).metadata();
+        const [l, t, w, h] = slot.crop;
+        img = img.extract({
+          left: Math.round(meta.width * l),
+          top: Math.round(meta.height * t),
+          width: Math.min(meta.width - Math.round(meta.width * l), Math.round(meta.width * w)),
+          height: Math.min(meta.height - Math.round(meta.height * t), Math.round(meta.height * h)),
+        });
+      }
+      buf = await img
         .resize(slot.width, slot.height, { fit: "cover", position: position(slot.position) })
         .jpeg({ quality: 80, progressive: true, mozjpeg: true })
         .toBuffer();

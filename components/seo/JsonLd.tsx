@@ -39,8 +39,8 @@ export function ClinicJsonLd() {
             postalCode: site.contact.address.postalCode,
           }
         : {}),
-      addressLocality: site.contact.address.city,
-      addressRegion: site.contact.address.region,
+      ...(has.city ? { addressLocality: site.contact.address.city } : {}),
+      ...(site.contact.address.region ? { addressRegion: site.contact.address.region } : {}),
       addressCountry: site.contact.address.country,
     },
     ...(site.contact.geo

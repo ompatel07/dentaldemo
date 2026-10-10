@@ -41,7 +41,7 @@ export const treatments: Treatment[] = [
       },
       {
         title: "The crown",
-        body: "Scanned, designed on screen with you in the room, then hand-finished by our ceramist in Ahmedabad.",
+        body: "Scanned, designed on screen with you in the room, then hand-finished by our own ceramist.",
       },
     ],
     includes: [

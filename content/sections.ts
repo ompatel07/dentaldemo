@@ -10,7 +10,7 @@
 export const sections = {
   hero: {
     chapter: "01",
-    label: "Dental atelier, Ahmedabad",
+    label: "Dental atelier",
     /** One entry per line of the headline, exactly as it should break. */
     headlineLines: ["Dentistry,", "crafted for smiles", "worth keeping."],
     emphasis: ["crafted"],
@@ -19,9 +19,9 @@ export const sections = {
     primaryCta: "Book your visit",
     secondaryCta: "Take the smile quiz",
     scrollCue: "Scroll",
-    photoCaption: "Aligners, 11 months",
+    photoCaption: "Room one",
     stats: [
-      { value: 11, suffix: " yrs", label: "In Ahmedabad" },
+      { value: 11, suffix: " yrs", label: "In practice" },
       { value: 4200, suffix: "+", label: "Implants placed" },
       { value: 0, suffix: "", label: "Double-booked chairs" },
     ],

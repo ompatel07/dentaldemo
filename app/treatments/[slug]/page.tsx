@@ -27,7 +27,7 @@ export async function generateMetadata({ params }: Params): Promise<Metadata> {
   const treatment = treatmentBySlug(slug);
   if (!treatment) return {};
 
-  const description = `${treatment.tagline} ${site.copy.priceFrom} ${formatCurrency(treatment.priceFrom)} at ${site.brand.name}, ${site.contact.address.city}.`;
+  const description = `${treatment.tagline} ${site.copy.priceFrom} ${formatCurrency(treatment.priceFrom)} at ${[site.brand.name, site.contact.address.city].filter(Boolean).join(", ")}.`;
 
   return {
     title: treatment.name,

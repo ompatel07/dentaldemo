@@ -47,6 +47,9 @@ export const site = {
    * field in and all of it comes back - nothing else needs editing. (The
    * `has` flags at the bottom of this file are what the components read.)
    *
+   *   address.city / region               e.g. "Ahmedabad", "Gujarat" - the city also
+   *                                       returns to the hero label, the page title
+   *                                       and the search description
    *   phone / emergencyPhone / whatsapp   e.g. "+91 79 4000 1200"
    *   address.line1 / line2 / postalCode  e.g. "No. 4, Shilp Avenue", "Prahlad Nagar", "380015"
    *   geo                                 e.g. { latitude: 23.0121, longitude: 72.5078 }
@@ -64,8 +67,8 @@ export const site = {
     address: {
       line1: "" as string,
       line2: "" as string,
-      city: "Ahmedabad",
-      region: "Gujarat",
+      city: "" as string,
+      region: "" as string,
       postalCode: "" as string,
       country: "IN",
       countryName: "India",
@@ -91,7 +94,7 @@ export const site = {
     reviewCount: 1284,
     reviewSource: "Google",
     emergencyPromise: "Same-day emergency care",
-    secondary: "11 years in Ahmedabad",
+    secondary: "11 years in practice",
   },
 
   /** `preview` is the image the fullscreen menu reveals on hover. */
@@ -149,7 +152,7 @@ export const site = {
     { wordmark: "Vogue India", note: "Featured 2025" },
     { wordmark: "Condé Nast Traveller", note: "Wellness edit" },
     { wordmark: "ICOI", note: "Fellowship" },
-    { wordmark: "Ahmedabad Mirror", note: "Clinic of the year" },
+    { wordmark: "Dental Tribune", note: "Clinic of the year" },
   ] satisfies Affiliation[],
 
   /** Indicative financing used by the EMI calculator. */
@@ -196,13 +199,13 @@ export const site = {
   seo: {
     /** The production origin - see SITE_URL at the top of this file. */
     url: SITE_URL,
-    titleDefault: "Aurelle - Dental Atelier, Ahmedabad",
+    titleDefault: "Aurelle - Dental Atelier",
     titleTemplate: "%s - Aurelle Dental Atelier",
     description:
-      "A dental atelier in Ahmedabad. Implants, aligners and veneers made with unhurried craft - transparent pricing, same-day emergencies, and care built for nervous patients.",
+      "A dental atelier. Implants, aligners and veneers made with unhurried craft - transparent pricing, same-day emergencies, and care built for nervous patients.",
     keywords: [
-      "dentist Ahmedabad",
-      "dental implants Ahmedabad",
+      "dentist",
+      "dental implants",
       "invisible aligners",
       "smile design",
       "emergency dentist",
@@ -304,6 +307,7 @@ export const has = {
   emergencyPhone: Boolean(site.contact.emergencyPhone),
   whatsapp: Boolean(site.contact.whatsapp),
   address: Boolean(site.contact.address.line1),
+  city: Boolean(site.contact.address.city),
   map: Boolean(site.contact.address.line1 && site.contact.mapEmbedSrc),
 } as const;
 

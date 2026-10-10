@@ -175,7 +175,7 @@ export function Preloader({ onReveal, onDone }: Props) {
       <div ref={metaRef} className="pointer-events-none absolute inset-x-0 bottom-0 p-[var(--gutter)] text-[var(--paper)] opacity-0">
         <div className="flex items-end justify-between gap-6">
           <p className="text-sm font-medium">
-            {site.brand.suffix}, {site.contact.address.city}
+            {[site.brand.suffix, site.contact.address.city].filter(Boolean).join(", ")}
           </p>
           <p className="display text-[clamp(1.75rem,4vw,3rem)] leading-none tabular-nums">
             <span ref={counterRef}>000</span>

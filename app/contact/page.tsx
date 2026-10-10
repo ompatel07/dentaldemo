@@ -12,7 +12,7 @@ import { mapsHref, telHref, whatsappHref } from "@/lib/format";
 
 export const metadata: Metadata = {
   title: "Contact",
-  description: `Where to find ${site.brand.name} in ${site.contact.address.city}, when it is open, and how to reach a dentist out of hours.`,
+  description: `How to reach ${site.brand.name}${has.city ? " in " + site.contact.address.city : ""}, and when it is open.`,
   alternates: { canonical: "/contact" },
 };
 

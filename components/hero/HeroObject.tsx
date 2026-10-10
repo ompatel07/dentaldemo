@@ -59,7 +59,7 @@ export function HeroObject({ className }: { className?: string }) {
     // The hero places one of these per layout and hides the other with
     // CSS; a hidden box measures zero and never loads anything.
     const width = boxRef.current?.getBoundingClientRect().width ?? 0;
-    if (width < 72) return;
+    if (width < 56) return;
     if (site.hero.phones !== "3d" && window.matchMedia("(max-width: 1023px)").matches) return;
 
     const motionOff = prefersReducedMotion();

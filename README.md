@@ -62,7 +62,7 @@ node scripts/mobile-flows.mjs  http://localhost:3000    # menu, booking, carouse
 What is different below 768px:
 
 - **Scrolling is native.** Lenis is not started on touch devices; scroll locks (menu, booking) are counted and always released.
-- **The hero leads with the photograph**, not the copy. The review chip and the 3D molar (on a mint badge, tagline turning round it) hang off the photograph's lower edge beside the headline, the buttons are full width, and the proof numbers close the block as a dark card. The molar runs live on phones with enough memory once the page has loaded; the still is there from the first frame.
+- **The hero is one tall photograph with the headline on it.** The picture of the chair and the headline share a grid cell: the headline sits at the foot of the image in white over a dark fade, the 3D molar turns on a stamped badge at the top corner, and the copy, full-width buttons, rating and a dark card of proof numbers follow underneath. The molar runs live on phones with enough memory once the page has loaded; the still is there from the first frame.
 - **Treatments** is a heading with its own swipe carousel beneath it, not one long horizontal track.
 - **Technology** cards are a plain stack; the sticky overlap only happens from tablet width up.
 - **Before/after** puts the photograph above the list of cases.
@@ -77,7 +77,7 @@ What is different below 768px:
 
 Brand name, tagline, phone numbers, address, geo coordinates, opening hours, socials, currency, locale, SEO strings, financing rates, booking slots. Also the behaviour switches, documented in place: `motion.reducedMotion`, `intro`, `hero.object`, `hero.phones`, `booking.endpoint`.
 
-> **Phone numbers and the street address are currently empty**, waiting on the client. That is a supported state, not a gap: leave `contact.phone`, `emergencyPhone`, `whatsapp`, `address.line1` or `mapEmbedSrc` as `""` and everything that depends on it steps aside — the phone in the nav, the Emergency button in the dock, WhatsApp links, the map, the address blocks, the matching JSON-LD fields — and the footer, menu and contact page fill the space with email, hours and booking instead. Fill a field in and it all returns with no other edits. Two pieces of copy were made number-free at the same time and are worth revisiting then: the first two answers in `content/faqs.ts`, and the "Where exactly are you?" question, which is commented out at the bottom of that file.
+> **Phone numbers, the street address and the city are currently empty**, waiting on the client. That is a supported state, not a gap: leave `contact.phone`, `emergencyPhone`, `whatsapp`, `address.line1`, `address.city` or `mapEmbedSrc` as `""` and everything that depends on it steps aside — the phone in the nav, the Emergency button in the dock, WhatsApp links, the map, the address blocks, the matching JSON-LD fields — and the footer, menu and contact page fill the space with email, hours and booking instead. Fill a field in and it all returns with no other edits. Two pieces of copy were made number-free at the same time and are worth revisiting then: the first two answers in `content/faqs.ts`, and the "Where exactly are you?" question, which is commented out at the bottom of that file.
 
 ### 2. `styles/tokens.css` — 10 minutes
 

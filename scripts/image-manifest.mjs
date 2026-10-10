@@ -12,13 +12,14 @@
  *   npm run photos -- --force   rebuild all of them
  *
  * `position` is the crop anchor (any sharp gravity, or "attention").
+ * `crop` is an explicit crop of the source, as fractions [left, top, width, height].
  * `derive` builds a slot from another slot instead of downloading.
  */
 
 export const images = [
   // ---- Hero ---------------------------------------------------------
-  { path: "images/hero-portrait.jpg", width: 1200, height: 1500, photo: "1617812191081-2a24e3f30e45", position: "attention",
-    label: "Hero portrait", note: "A real patient, mid-laugh, natural light. The single most important photograph on the site." },
+  { path: "images/hero-chair.jpg", width: 1200, height: 1500, photo: "1598256989800-fe5f95da9787", crop: [0.12, 0, 0.5334, 1],
+    label: "Hero: the chair", note: "The treatment chair in its room, bright and empty. The single most important photograph on the site - it also carries the headline on phones, so the lower third should be calm and fairly dark." },
   { path: "images/hero-clinic.jpg", width: 1200, height: 900, photo: "1629909613654-28e377c37b09", position: "centre",
     label: "Hero clinic", note: "The treatment room, wide, empty and bright." },
   { path: "images/og-default.jpg", width: 1200, height: 630,
